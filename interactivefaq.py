@@ -13,18 +13,30 @@ corpus_words = {}
 
 sentence = str(raw_input())
 
-def question_score_calculation(sentence, classifyer):
+def Classifyer(sentence, QUESTIONS_VECTOR=QUESTIONS_VECTOR):
     score = 0.0
+    highest_class = ['', 0.0]
+    secondHighest_class = ['', 0.0]
+    thirdHighest_class = ['', 0.0]
     # tokenize each word in our new sentence
     sentence = nltk.word_tokenize(sentence)
-    print sentence
-    for word in sentence:
-        # check to see if the stem of the word is in any of our classes
-        if word in classifyer:
-            # treat each word with same weight
-            score += 1.0
-        relativescore = score/len(classifyer)
-    return relativescore
+    for c in QUESTIONS_VECTOR:
+        for word in sentence:
+            # check to see if the stem of the word is in any of our classes
+            if word in c:
+                # treat each word with same weight
+                score += 1.0
+            relativescore = score/len(c)
+        if relativescore > highest_class[1]:
+            highest_class[0] = c
+            highest_class[1] = relativescore
+        elif relativescore > secondHighest_class[1]:
+            secondHighest_class[0] = c
+            secondHighest_class[1] = relativescore
+        elif relativescore > thirdHighest_class[1]:
+            thirdHighest_class[0] = c
+            thirdHighest_class[1] = relativescore
+        score = 0.0
+    return (highest_class, secondHighest_class, thirdHighest_class)
 
-for c in QUESTIONS_VECTOR:
-    print ("Class: %s  Score: %s \n" % (c, question_score_calculation(sentence, c)))
+print Classifyer(sentence)
