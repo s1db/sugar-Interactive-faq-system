@@ -1,0 +1,19 @@
+What is Sugar?
+Who is doing Sugar development?
+Does Sugar support Android?
+What makes Sugar different from other educational software platforms?
+Who can use Sugar and how do they benefit?
+Why Sugar?
+Does Sugar run on {GNU/Linux, Fedora, Ubuntu, SUSE, MAC OS, Windows, etc.}?
+Is there an image of the OS that can be run on a PC?
+Does Sugar run on an ASUS Eee PC (or other "ultra-mobile" or "mini" PCs)?
+Are there any platforms where Sugar runs on?
+What is Sugar Labs?
+What is the mission of Sugar Labs?
+What are the principles that guide Sugar Labs?
+What is the relationship of Sugar Labs to One Laptop per Child?
+What is the standard Sugar license?
+What is a Sugar Activity?
+Who is upstream for Sugar?
+Who is Sugar Labs?
+How do I get involved?
