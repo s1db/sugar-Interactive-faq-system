@@ -8,7 +8,7 @@
 #   Answering:
 #       [x] IRC Connection.
 #       [x] Sending result.
-#       [ ] A decision tree of responses.
+#       [x] A decision tree of responses.
 
 
 # Imports
@@ -28,8 +28,8 @@ ANSWERS = ['Sugar is an educational software platform built with the Python prog
 # IRC Constants
 HOST = 'chat.freenode.net' #irc server
 PORT = 6665 #port
-NICK = 'faqsbot' + str(randint(1,1000))
-CHANNEL = '#sugar-newbies'
+NICK = 'faqsbot' # Uncomment for testing: + str(randint(1,1000))
+CHANNEL = '#sugar'
 
 # Functions
 def Classifyer(sentence, QUESTIONS_VECTOR=QUESTIONS_VECTOR):
@@ -72,9 +72,10 @@ irc.send("NICK "+NICK+"\n")
 time.sleep(1)
 irc.send("JOIN "+CHANNEL+"\n")
 
+message("To use try: @faqsbot 'YOUR-QUESTION'")
 #IRC Communication
 while 1:
-    time.sleep(0.1)
+    time.sleep(0.5)
     try:
         text=irc.recv(2040)
         print(text)
@@ -82,39 +83,38 @@ while 1:
         pass
     if text.find("PING")!=-1:
         irc.send("PONG "+text.split()[1]+"\r\n")
-    if text.lower().find(":@faqsbot")!=-1:
-        #irc.send("PRIVMSG "+CHANNEL+" :Hello!\r\n")
-        raw_response = Classifyer(text)
-        print raw_response
-        print raw_response[0]
-        print raw_response[0][0]
-        print QUESTIONS_VECTOR.index(raw_response[0][0])
-        indexValue = int(QUESTIONS_VECTOR.index(raw_response[0][0]))
-        question = QUESTIONS[indexValue]
-        answer = ANSWERS[indexValue]
-        message('Question: ' + question)
-        message(answer)
-        message("Incase this isn't the question you were looking for, respond with no. If this is response you were looking for, respond with yes.")
-        t_end_1 = time.time() + 6 * 15 #1.5 minutes
-        while time.time() < t_end_1 and (text.lower().find('n') != -1 or text.lower().find('no') != -1 or text.lower().find('nope') != -1):
-            #irc.send((str('PRIVMSG ' + data.split()[2]) + ' Hi! \r\n').encode())
+    try:
+        if text.lower().find(":@faqsbot")!=-1:
+            raw_response = Classifyer(text)
+            indexValue = int(QUESTIONS_VECTOR.index(raw_response[0][0]))
+            question = QUESTIONS[indexValue]
+            answer = ANSWERS[indexValue]
+            message('Question #1: ' + question)
+            message(answer)
+            message("Incase this isn't the question you were looking for, respond with '!next'.")
+            text = text.replace(":@faqsbot", "")
+    except Exception:
+        none
+    try:
+        if text.lower().find(":!next")!=-1:
             indexValue = int(QUESTIONS_VECTOR.index(raw_response[1][0]))
             question = QUESTIONS[indexValue]
-            answers = ANSWERS[indexValue]
+            answer = ANSWERS[indexValue]
             message('Question #2: ' + question)
             message(answer)
-            message("Incase this isn't the question you were looking for, respond with no. If this is response you were looking for, respond with yes.")
+            message("Incase this isn't the question you were looking for, respond with '!!next'.")
+            text = text.replace(":!next", "")
+    except Exception:
+        none
+    try:
+        if text.lower().find(":!!next")!=-1:
+            indexValue = int(QUESTIONS_VECTOR.index(raw_response[2][0]))
+            question = QUESTIONS[indexValue]
+            answer = ANSWERS[indexValue]
+            message('Question: ' + question)
+            message(answer)
+            text = text.replace(":!!next", "")
+    except Exception:
+        none
 
-
-            t_end_2 = time.time() + 6 * 15 #1.5 minutes
-            while time.time() < t_end_2:
-                if text.find('n') != -1 or data2.find('no') != -1 or data2.find('nope') != -1:
-                    indexValue = int(QUESTIONS_VECTOR.index(raw_response[2][0]))
-                    question = QUESTIONS[indexValue]
-                    answers = ANSWERS[indexValue]
-                    irc.send((str('PRIVMSG ' + data.split()[2]) + question + '\r\n').encode())
-                    break
-                break
-
-
-s.close()
+irc.close()
